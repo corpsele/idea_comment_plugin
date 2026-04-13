@@ -2,14 +2,52 @@
 <idea-plugin>
     <id>com.github.corpsele.ideacommentplugin</id>
     <name>idea_comment_plugin</name>
-    <vendor>corpsele</vendor>
+    <vendor email="corpsele@aliyun.com">corpsele</vendor>
+    <description>
+        <![CDATA[
+        智能生成类、方法、属性注释块，支持自定义作者和日期格式。
+        ]]>
+    </description>
 
     <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
 
     <resource-bundle>messages.MyBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow factoryClass="com.github.corpsele.ideacommentplugin.toolWindow.MyToolWindowFactory" id="MyToolWindow"/>
-        <postStartupActivity implementation="com.github.corpsele.ideacommentplugin.startup.MyProjectActivity" />
+        <projectService serviceInterface="com.github.corpsele.ideacommentplugin.services.CommentGeneratorService"
+                        serviceImplementation="com.github.corpsele.ideacommentplugin.services.CommentGeneratorService"/>
+        <projectService serviceInterface="com.github.corpsele.ideacommentplugin.services.ProjectStructureService"
+                        serviceImplementation="com.github.corpsele.ideacommentplugin.services.ProjectStructureService"/>
     </extensions>
+    <actions>
+        <group id="CommentGeneratorGroup" text="Comment Generator" popup="true">
+            <action id="GenerateCommentAction"
+                    class="com.github.corpsele.ideacommentplugin.actions.GenerateCommentAction"
+                    text="Generate Comment Block"
+                    description="Generate various types of comment blocks">
+                <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+                <add-to-group group-id="ToolsMenu" anchor="last"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift C"/>
+            </action>
+
+            <action id="ShowProjectStructureAction"
+                    class="com.github.corpsele.ideacommentplugin.actions.ShowProjectStructureAction"
+                    text="Show Project Structure"
+                    description="Display project file structure in a tree view">
+                <add-to-group group-id="ProjectViewPopupMenu" anchor="last"/>
+                <add-to-group group-id="ToolsMenu" anchor="last"/>
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl shift P"/>
+            </action>
+
+            <separator/>
+
+            <action id="GenerateLicenseAction"
+                    class="com.github.corpsele.ideacommentplugin.actions.GenerateLicenseAction"
+                    text="Generate License Header"
+                    description="Generate standard license header">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt L"/>
+            </action>
+        </group>
+    </actions>
 </idea-plugin>
